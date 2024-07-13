@@ -22,8 +22,6 @@ export default function Home() {
 
   //
 
-  const amountInputRef = useRef<HTMLInputElement>(null);
-
   const [amountValue, setAmountValue] = useState<number | null>(null);
   const debouncedAmountValue = useDebounce(amountValue, 250);
 
@@ -35,8 +33,6 @@ export default function Home() {
   };
 
   //
-
-  const yearInputRef = useRef<HTMLInputElement>(null);
 
   const [yearValue, setYearValue] = useState<number | null>(40);
   const debouncedYearValue = useDebounce(yearValue, 250);
@@ -50,6 +46,23 @@ export default function Home() {
     const value = parseFloat(event.target.value);
     setYearValue(value);
   };
+
+  //
+
+  const [yearlyAdditionValue, setYearlyAdditionValue] = useState<number | null>(null);
+  const debouncedYearlyAdditionValue = useDebounce(yearlyAdditionValue, 250);
+
+  const handleYearlyAdditionChange = (event: ContentEditableEvent) => {
+    if (event.target.value === '' || event.target.value == null) return setYearlyAdditionValue(null);
+
+    // // So many operations multiplying exponential numbers causes the browser to crash over 4 digits
+    // if (event.target.value.length > 4) return setYearlyAdditionValue(9999);
+
+    const value = parseFloat(event.target.value.replaceAll(',', ''));
+    setYearlyAdditionValue(value);
+  };
+
+  //
 
   const [interestRate, setInterestRate] = useState<number>(0.07);
 
@@ -71,7 +84,13 @@ export default function Home() {
           amountOfMoney: amount,
         });
 
-        amount = amount * (1 + interestRate);        
+        /**
+         * TODO: There is an issue here, I am not sure which formula is correct
+         *   Should the yearly addition be added before or after the interest rate is applied?
+         */
+        
+        // amount = (amount * (1 + interestRate)) + (debouncedYearlyAdditionValue ?? 0);        
+        amount = ((amount + (debouncedYearlyAdditionValue ?? 0)) * (1 + interestRate));        
       }
 
       resolve(result);
@@ -79,6 +98,7 @@ export default function Home() {
     [
       debouncedAmountValue,
       debouncedYearValue,
+      debouncedYearlyAdditionValue,
       interestRate,
     ],
     []
@@ -113,22 +133,25 @@ export default function Home() {
 
       <div className="flex flex-row justify-center items-center w-full gap-6 text-4xl">
 
-        <div 
-          className="flex flex-row w-5 select-none cursor-pointer text-slate-500 hover:text-slate-400 transition-all"
-          onClick={() => moveCurrentCurrencySymbolIndex('forward')}
-          onContextMenu={() => moveCurrentCurrencySymbolIndex('backward')}
-        >
-          {currencySymbols[currentCurrencySymbolIndex]}
-        </div>
+        <div className="flex flex-row justify-center items-center gap-2 flex-1">
 
-        <ContentEditable
-          innerRef={amountInputRef}
-          autoFocus
-          className={"flex-1 bg-transparent outline-none rounded-lg border border-black focus:border-slate-800 px-2 py-1 transition-all " + (amountValue == null || amountValue === 0 ? 'text-slate-500' : 'text-slate-50')}
-          html={(amountValue ?? '0').toLocaleString()}
-          onChange={handleAmountChange}
-          tagName="div"
-        />
+          <div 
+            className="flex flex-row w-5 select-none cursor-pointer text-slate-500 hover:text-slate-400 transition-all"
+            onClick={() => moveCurrentCurrencySymbolIndex('forward')}
+            onContextMenu={() => moveCurrentCurrencySymbolIndex('backward')}
+          >
+            {currencySymbols[currentCurrencySymbolIndex]}
+          </div>
+
+          <ContentEditable
+            autoFocus
+            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 px-2 py-1 transition-all " + (amountValue == null || amountValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+            html={(amountValue ?? '0').toLocaleString()}
+            onChange={handleAmountChange}
+            tagName="div"
+          />
+
+        </div>
 
         <div className="flex flex-row justify-center items-center gap-6">
 
@@ -138,13 +161,36 @@ export default function Home() {
 
           <ContentEditable
             html={yearValue?.toString() ?? ''}
-            className={"flex-1 bg-transparent outline-none rounded-lg border border-black focus:border-slate-800 px-2 py-1 transition-all " + (yearValue == null || yearValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 px-2 py-1 transition-all " + (yearValue == null || yearValue === 0 ? 'text-slate-500' : 'text-slate-50')}
             onChange={handleYearChange}
             tagName='div'
           />
 
           <div className="text-slate-500">
-            years
+            years, adding
+          </div>
+
+          <div className="flex flex-row justify-center items-center gap-2">
+
+            <div 
+              className="flex flex-row w-5 select-none cursor-pointer text-slate-500 hover:text-slate-400 transition-all"
+              onClick={() => moveCurrentCurrencySymbolIndex('forward')}
+              onContextMenu={() => moveCurrentCurrencySymbolIndex('backward')}
+            >
+              {currencySymbols[currentCurrencySymbolIndex]}
+            </div>
+
+            <ContentEditable
+              html={(yearlyAdditionValue ?? '0').toLocaleString()}
+              className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 px-2 py-1 transition-all " + (yearlyAdditionValue == null || yearlyAdditionValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+              onChange={handleYearlyAdditionChange}
+              tagName='div'
+            />
+
+          </div>
+
+          <div className="text-slate-500">
+            each year
           </div>
 
         </div>
@@ -158,6 +204,7 @@ export default function Home() {
             width={chartContainerDimensions[0]}
             height={chartContainerDimensions[1]}
             data={data}
+            currencySymbol={currencySymbols[currentCurrencySymbolIndex]}
           />
         </Suspense>
 

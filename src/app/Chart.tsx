@@ -11,11 +11,13 @@ Description: description
 
 import { FC } from "react";
 import { Line, LineChart, Tooltip, XAxis } from "recharts";
+import CustomTooltip from "./CustomTooltip";
 
 type ChartPropsType = {
     data: CompountChartDataType;
     width: number;
     height: number;
+    currencySymbol: string;
 }
 
 const Chart: FC<ChartPropsType> = (props) => {
@@ -26,7 +28,7 @@ const Chart: FC<ChartPropsType> = (props) => {
             data={props.data}
         >
             <XAxis dataKey="year" />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip currencySymbol={props.currencySymbol} />} />
             <Line
                 dot={false}
                 type="monotone"
