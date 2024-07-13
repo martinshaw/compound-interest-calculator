@@ -11,7 +11,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "gh-pages -d dist"
+    "deploy": "next build && gh-pages -d dist"
   },
   "dependencies": {
     "@uidotdev/usehooks": "^2.4.1",
