@@ -2,14 +2,11 @@
 
 import { useAsyncMemo } from "use-async-memo";
 import { useDebounce } from "@uidotdev/usehooks";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { FocusEventHandler, lazy, Suspense, useEffect, useRef, useState } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import Chart from "./Chart";
 
 export default function Home() {
-
-  //
-
   const currencySymbols = ["£", "$", "€", "¥", "₹", "₽", "₿", "₺", "₴", "₩", "₮", "₦"];
   const [currentCurrencySymbolIndex, setCurrentCurrencySymbolIndex] = useState<number>(0);
   const moveCurrentCurrencySymbolIndex = (movement: 'forward' | 'backward') => {
@@ -69,14 +66,8 @@ export default function Home() {
 
   const handleInterestRateChange = (event: ContentEditableEvent) => {
     if (event.target.value === '' || event.target.value == null) return setInterestRateValue(null);
-
     
     const value = parseFloat(event.target.value.replaceAll(',', '')) / 100;
-
-
-    console.log('handleInterestRateChange', event.target.value, value);
-
-
     setInterestRateValue(value);
   };
 
@@ -115,13 +106,14 @@ export default function Home() {
   //
 
   const [chartContainerDimensions, setChartContainerDimensions] = useState<[number, number]>([0, 0]);
+  const chartContainerPadding = 20;
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
   const handleChartContainerResize = () => {
     if (chartContainerRef.current == null) return;
     setChartContainerDimensions([
-      chartContainerRef.current?.parentElement?.clientWidth ?? 0,
-      chartContainerRef.current.clientHeight,
+      (chartContainerRef.current?.parentElement?.clientWidth ?? 0) - (chartContainerPadding * 4),
+      (chartContainerRef.current?.clientHeight ?? 0) - (chartContainerPadding),
     ]);
   };
 
@@ -131,6 +123,17 @@ export default function Home() {
 
     return () => window.removeEventListener('resize', handleChartContainerResize);
   }, [chartContainerRef]);
+
+  const focusContentEditable: FocusEventHandler<HTMLDivElement> = function (event) {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    const target = event.target as HTMLDivElement;
+
+    range.selectNodeContents(target);
+    range.collapse(false);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between px-20 pt-20 gap-10">
@@ -153,6 +156,7 @@ export default function Home() {
             html={(amountValue ?? '0').toLocaleString()}
             onChange={handleAmountChange}
             tagName="div"
+            onFocus={focusContentEditable}
           />
 
         </div>
@@ -168,6 +172,7 @@ export default function Home() {
             className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (yearValue == null || yearValue === 0 ? 'text-slate-500' : 'text-slate-50')}
             onChange={handleYearChange}
             tagName='div'
+            onFocus={focusContentEditable}
           />
 
           <div className="text-slate-500">
@@ -181,6 +186,7 @@ export default function Home() {
               className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (interestRateValue == null || interestRateValue === 0 ? 'text-slate-500' : 'text-slate-50')}
               onChange={handleInterestRateChange}
               tagName='div'
+              onFocus={focusContentEditable}
             />
 
             <div className="text-slate-500">
@@ -208,6 +214,7 @@ export default function Home() {
               className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (yearlyAdditionValue == null || yearlyAdditionValue === 0 ? 'text-slate-500' : 'text-slate-50')}
               onChange={handleYearlyAdditionChange}
               tagName='div'
+              onFocus={focusContentEditable}
             />
 
           </div>
@@ -222,14 +229,18 @@ export default function Home() {
 
       <div className={"block flex-1 " + ((data || []).length <= 0 ? 'invisible' : '')} ref={chartContainerRef}>
 
-        <Suspense>
-          <Chart
-            width={chartContainerDimensions[0]}
-            height={chartContainerDimensions[1]}
-            data={data}
-            currencySymbol={currencySymbols[currentCurrencySymbolIndex]}
-          />
-        </Suspense>
+        <div>
+
+          <Suspense>
+            <Chart
+              width={chartContainerDimensions[0]}
+              height={chartContainerDimensions[1]}
+              data={data}
+              currencySymbol={currencySymbols[currentCurrencySymbolIndex]}
+            />
+          </Suspense>
+
+        </div>
 
       </div>
 
