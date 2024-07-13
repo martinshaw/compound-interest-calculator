@@ -88,7 +88,7 @@ export default function Home() {
          * TODO: There is an issue here, I am not sure which formula is correct
          *   Should the yearly addition be added before or after the interest rate is applied?
          */
-        
+
         // amount = (amount * (1 + interestRate)) + (debouncedYearlyAdditionValue ?? 0);        
         amount = ((amount + (debouncedYearlyAdditionValue ?? 0)) * (1 + interestRate));        
       }
@@ -129,7 +129,7 @@ export default function Home() {
 
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between px-24 pt-24 gap-6">
+    <main className="flex min-h-screen flex-col items-center justify-between px-20 pt-20 gap-10">
 
       <div className="flex flex-row justify-center items-center w-full gap-6 text-4xl">
 
@@ -145,7 +145,7 @@ export default function Home() {
 
           <ContentEditable
             autoFocus
-            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 px-2 py-1 transition-all " + (amountValue == null || amountValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (amountValue == null || amountValue === 0 ? 'text-slate-500' : 'text-slate-50')}
             html={(amountValue ?? '0').toLocaleString()}
             onChange={handleAmountChange}
             tagName="div"
@@ -161,7 +161,7 @@ export default function Home() {
 
           <ContentEditable
             html={yearValue?.toString() ?? ''}
-            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 px-2 py-1 transition-all " + (yearValue == null || yearValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (yearValue == null || yearValue === 0 ? 'text-slate-500' : 'text-slate-50')}
             onChange={handleYearChange}
             tagName='div'
           />
@@ -182,7 +182,7 @@ export default function Home() {
 
             <ContentEditable
               html={(yearlyAdditionValue ?? '0').toLocaleString()}
-              className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 px-2 py-1 transition-all " + (yearlyAdditionValue == null || yearlyAdditionValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+              className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (yearlyAdditionValue == null || yearlyAdditionValue === 0 ? 'text-slate-500' : 'text-slate-50')}
               onChange={handleYearlyAdditionChange}
               tagName='div'
             />
@@ -197,7 +197,7 @@ export default function Home() {
 
       </div>
 
-      <div className="block flex-1 abc" ref={chartContainerRef}>
+      <div className={"block flex-1 " + ((data || []).length <= 0 ? 'invisible' : '')} ref={chartContainerRef}>
 
         <Suspense>
           <Chart
