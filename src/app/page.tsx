@@ -64,7 +64,21 @@ export default function Home() {
 
   //
 
-  const [interestRate, setInterestRate] = useState<number>(0.07);
+  const [interestRateValue, setInterestRateValue] = useState<number|null>(0.07);
+  const debouncedInterestRateValue = useDebounce(interestRateValue, 250);
+
+  const handleInterestRateChange = (event: ContentEditableEvent) => {
+    if (event.target.value === '' || event.target.value == null) return setInterestRateValue(null);
+
+    
+    const value = parseFloat(event.target.value.replaceAll(',', '')) / 100;
+
+
+    console.log('handleInterestRateChange', event.target.value, value);
+
+
+    setInterestRateValue(value);
+  };
 
   //
 
@@ -84,13 +98,7 @@ export default function Home() {
           amountOfMoney: amount,
         });
 
-        /**
-         * TODO: There is an issue here, I am not sure which formula is correct
-         *   Should the yearly addition be added before or after the interest rate is applied?
-         */
-
-        // amount = (amount * (1 + interestRate)) + (debouncedYearlyAdditionValue ?? 0);        
-        amount = ((amount + (debouncedYearlyAdditionValue ?? 0)) * (1 + interestRate));        
+        amount = (amount * (1 + (debouncedInterestRateValue ?? 0))) + (debouncedYearlyAdditionValue ?? 0);
       }
 
       resolve(result);
@@ -99,7 +107,7 @@ export default function Home() {
       debouncedAmountValue,
       debouncedYearValue,
       debouncedYearlyAdditionValue,
-      interestRate,
+      debouncedInterestRateValue,
     ],
     []
   );
@@ -123,10 +131,6 @@ export default function Home() {
 
     return () => window.removeEventListener('resize', handleChartContainerResize);
   }, [chartContainerRef]);
-
-  //
-
-
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between px-20 pt-20 gap-10">
@@ -167,7 +171,26 @@ export default function Home() {
           />
 
           <div className="text-slate-500">
-            years, adding
+            years at
+          </div>
+
+          <div className="flex flex-row justify-center items-center gap-2">
+
+            <ContentEditable
+              html={((interestRateValue ?? 0) * 100).toFixed(0)}
+              className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (interestRateValue == null || interestRateValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+              onChange={handleInterestRateChange}
+              tagName='div'
+            />
+
+            <div className="text-slate-500">
+              %,
+            </div>
+
+          </div>
+
+          <div className="text-slate-500">
+            adding
           </div>
 
           <div className="flex flex-row justify-center items-center gap-2">
