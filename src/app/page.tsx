@@ -136,9 +136,9 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between px-20 pt-20 gap-10">
+    <main className="flex min-h-[150vh] lg:min-h-screen flex-col items-center justify-between px-20 pt-20 gap-10">
 
-      <div className="flex flex-row justify-center items-center w-full gap-6 text-4xl">
+      <div className="flex flex-col lg:flex-row justify-center items-center w-full gap-6 text-2xl lg:text-3xl xl:text-4xl">
 
         <div className="flex flex-row justify-center items-center gap-2 flex-1">
 
@@ -161,7 +161,7 @@ export default function Home() {
 
         </div>
 
-        <div className="flex flex-row justify-center items-center gap-6">
+        <div className="flex flex-col lg:flex-row justify-center items-center gap-6">
 
           <div className="text-slate-500">
             for
