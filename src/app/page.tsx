@@ -136,7 +136,7 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-[150vh] lg:min-h-screen flex-col items-center justify-between px-20 pt-20 gap-10">
+    <main className="flex min-h-[150vh] lg:min-h-screen flex-col items-center justify-between px-20 pt-20 gap-10 select-none">
 
       <div className="flex flex-col lg:flex-row justify-center items-center w-full gap-6 text-2xl lg:text-3xl xl:text-4xl">
 
@@ -152,7 +152,7 @@ export default function Home() {
 
           <ContentEditable
             autoFocus
-            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (amountValue == null || amountValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 select-text transition-all " + (amountValue == null || amountValue === 0 ? 'text-slate-500' : 'text-slate-50')}
             html={(amountValue ?? '0').toLocaleString()}
             onChange={handleAmountChange}
             tagName="div"
@@ -169,7 +169,7 @@ export default function Home() {
 
           <ContentEditable
             html={yearValue?.toString() ?? ''}
-            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (yearValue == null || yearValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 select-text transition-all " + (yearValue == null || yearValue === 0 ? 'text-slate-500' : 'text-slate-50')}
             onChange={handleYearChange}
             tagName='div'
             onFocus={focusContentEditable}
@@ -183,7 +183,7 @@ export default function Home() {
 
             <ContentEditable
               html={((interestRateValue ?? 0) * 100).toFixed(0)}
-              className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (interestRateValue == null || interestRateValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+              className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 select-text transition-all " + (interestRateValue == null || interestRateValue === 0 ? 'text-slate-500' : 'text-slate-50')}
               onChange={handleInterestRateChange}
               tagName='div'
               onFocus={focusContentEditable}
@@ -211,7 +211,7 @@ export default function Home() {
 
             <ContentEditable
               html={(yearlyAdditionValue ?? '0').toLocaleString()}
-              className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 transition-all " + (yearlyAdditionValue == null || yearlyAdditionValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+              className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 select-text transition-all " + (yearlyAdditionValue == null || yearlyAdditionValue === 0 ? 'text-slate-500' : 'text-slate-50')}
               onChange={handleYearlyAdditionChange}
               tagName='div'
               onFocus={focusContentEditable}
