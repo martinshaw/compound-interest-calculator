@@ -13,7 +13,7 @@ https://martinshaw.github.io/compound-interest-calculator/
 
 ![Desktop Screenshot 1](screenshots/martinshaw.github.io_compound-interest-calculator_1.png)
 
-![Mobile Screenshot](screenshots/martinshaw.github.io_compound-interest-calculator_2.png)
+[Mobile Screenshot](screenshots/martinshaw.github.io_compound-interest-calculator_2.png)
 
 # For Developers:
 
