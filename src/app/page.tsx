@@ -129,6 +129,14 @@ export default function Home() {
     const selection = window.getSelection();
     const target = event.target as HTMLDivElement;
 
+    if ((event.target?.innerHTML ?? '0') == '0') {
+      range.selectNodeContents(target);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+
+      return;
+    }
+
     range.selectNodeContents(target);
     range.collapse(false);
     selection?.removeAllRanges();
@@ -227,7 +235,7 @@ export default function Home() {
 
       </div>
 
-      <div className={"block flex-1 " + ((data || []).length <= 0 ? 'invisible' : '')} ref={chartContainerRef}>
+      <div className={"block flex-1 transition-opacity duration-300 " + ((data || []).length <= 0 ? 'opacity-0' : 'opacity-100')} ref={chartContainerRef}>
 
         <div>
 
