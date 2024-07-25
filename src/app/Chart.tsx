@@ -12,6 +12,7 @@ Description: description
 import { FC } from "react";
 import { Line, LineChart, Tooltip, XAxis } from "recharts";
 import CustomTooltip from "./CustomTooltip";
+import { useDarkMode } from "usehooks-ts";
 
 type ChartPropsType = {
     data: CompountChartDataType;
@@ -21,13 +22,15 @@ type ChartPropsType = {
 }
 
 const Chart: FC<ChartPropsType> = (props) => {
+    const { isDarkMode } = useDarkMode()
+
     return (
         <LineChart
             width={props.width}
             height={props.height}
             data={props.data}
         >
-            <XAxis dataKey="year" />
+            <XAxis dataKey="year" stroke={isDarkMode ? '#64748b' : '#94a3b8'} />
             <Tooltip content={<CustomTooltip currencySymbol={props.currencySymbol} />} />
             <Line
                 dot={false}

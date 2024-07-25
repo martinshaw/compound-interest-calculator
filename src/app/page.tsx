@@ -25,7 +25,11 @@ export default function Home() {
   const handleAmountChange = (event: ContentEditableEvent) => {
     if (event.target.value === '' || event.target.value == null) return setAmountValue(null);
 
-    const value = parseFloat(event.target.value.replaceAll(',', ''));
+    let value: string | number = event.target.value.replaceAll(' ', '').replaceAll('\n', '').replaceAll(',', '').replaceAll('<br>', '');
+
+    value = parseFloat(value);
+    if (isNaN(value)) return setAmountValue(null);
+
     setAmountValue(value);
   };
 
@@ -37,10 +41,14 @@ export default function Home() {
   const handleYearChange = (event: ContentEditableEvent) => {
     if (event.target.value === '' || event.target.value == null) return setYearValue(null);
 
-    // So many operations multiplying exponential numbers causes the browser to crash over 4 digits
-    if (event.target.value.length > 4) return setYearValue(9999);
+    let value: string | number = event.target.value.replaceAll(' ', '').replaceAll('\n', '').replaceAll(',', '').replaceAll('<br>', '');
 
-    const value = parseFloat(event.target.value);
+    // So many operations multiplying exponential numbers causes the browser to crash over 4 digits
+    if ((value + '').length > 4) return setYearValue(9999);
+
+    value = parseFloat(value);
+    if (isNaN(value)) return setYearValue(null);
+
     setYearValue(value);
   };
 
@@ -52,10 +60,11 @@ export default function Home() {
   const handleYearlyAdditionChange = (event: ContentEditableEvent) => {
     if (event.target.value === '' || event.target.value == null) return setYearlyAdditionValue(null);
 
-    // // So many operations multiplying exponential numbers causes the browser to crash over 4 digits
-    // if (event.target.value.length > 4) return setYearlyAdditionValue(9999);
+    let value: string | number = event.target.value.replaceAll(' ', '').replaceAll('\n', '').replaceAll(',', '').replaceAll('<br>', '');
 
-    const value = parseFloat(event.target.value.replaceAll(',', ''));
+    value = parseFloat(value);
+    if (isNaN(value)) return setYearlyAdditionValue(null);
+
     setYearlyAdditionValue(value);
   };
 
@@ -66,8 +75,12 @@ export default function Home() {
 
   const handleInterestRateChange = (event: ContentEditableEvent) => {
     if (event.target.value === '' || event.target.value == null) return setInterestRateValue(null);
+
+    let value: string | number = event.target.value.replaceAll(' ', '').replaceAll('\n', '').replaceAll(',', '').replaceAll('<br>', '');
     
-    const value = parseFloat(event.target.value.replaceAll(',', '')) / 100;
+    value = parseFloat(value) / 100;
+    if (isNaN(value)) return setInterestRateValue(null);
+
     setInterestRateValue(value);
   };
 
@@ -151,7 +164,7 @@ export default function Home() {
         <div className="flex flex-row justify-center items-center gap-2 flex-1">
 
           <div 
-            className="flex flex-row w-5 select-none cursor-pointer text-slate-500 hover:text-slate-400 transition-all"
+            className="flex flex-row w-5 select-none cursor-pointer text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300 transition-all"
             onClick={() => moveCurrentCurrencySymbolIndex('forward')}
             onContextMenu={() => moveCurrentCurrencySymbolIndex('backward')}
           >
@@ -160,7 +173,7 @@ export default function Home() {
 
           <ContentEditable
             autoFocus
-            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 select-text transition-all " + (amountValue == null || amountValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+            className={"flex-1 bg-transparent outline-none rounded-lg border border-transparent hover:border-slate-400 focus:border-slate-500 active:border-slate-500 dark:border-black dark:hover:border-slate-600 dark:focus:border-slate-700 dark:active:border-slate-500 px-2 py-1 select-text transition-all " + (amountValue == null || amountValue === 0 ? 'text-slate-50 dark:text-slate-500' : 'text-slate-500 dark:text-slate-300')}
             html={(amountValue ?? '0').toLocaleString()}
             onChange={handleAmountChange}
             tagName="div"
@@ -171,19 +184,19 @@ export default function Home() {
 
         <div className="flex flex-col lg:flex-row justify-center items-center gap-6">
 
-          <div className="text-slate-500">
+          <div className="text-slate-400 dark:text-slate-500">
             for
           </div>
 
           <ContentEditable
             html={yearValue?.toString() ?? ''}
-            className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 select-text transition-all " + (yearValue == null || yearValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+            className={"flex-1 bg-transparent outline-none rounded-lg border border-transparent hover:border-slate-400 focus:border-slate-500 active:border-slate-500 dark:border-black dark:hover:border-slate-600 dark:focus:border-slate-700 dark:active:border-slate-500 px-2 py-1 select-text transition-all " + (yearValue == null || yearValue === 0 ? 'text-slate-50 dark:text-slate-500' : 'text-slate-500 dark:text-slate-300')}
             onChange={handleYearChange}
             tagName='div'
             onFocus={focusContentEditable}
           />
 
-          <div className="text-slate-500">
+          <div className="text-slate-400 dark:text-slate-500">
             years at
           </div>
 
@@ -191,26 +204,26 @@ export default function Home() {
 
             <ContentEditable
               html={((interestRateValue ?? 0) * 100).toFixed(0)}
-              className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 select-text transition-all " + (interestRateValue == null || interestRateValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+              className={"flex-1 bg-transparent outline-none rounded-lg border border-transparent hover:border-slate-400 focus:border-slate-500 active:border-slate-500 dark:border-black dark:hover:border-slate-600 dark:focus:border-slate-700 dark:active:border-slate-500 px-2 py-1 select-text transition-all " + (interestRateValue == null || interestRateValue === 0 ? 'text-slate-50 dark:text-slate-500' : 'text-slate-500 dark:text-slate-300')}
               onChange={handleInterestRateChange}
               tagName='div'
               onFocus={focusContentEditable}
             />
 
-            <div className="text-slate-500">
+            <div className="text-slate-400 dark:text-slate-500">
               %,
             </div>
 
           </div>
 
-          <div className="text-slate-500">
+          <div className="text-slate-400 dark:text-slate-500">
             adding
           </div>
 
           <div className="flex flex-row justify-center items-center gap-2">
 
             <div 
-              className="flex flex-row w-5 select-none cursor-pointer text-slate-500 hover:text-slate-400 transition-all"
+              className="flex flex-row w-5 select-none cursor-pointer text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300 transition-all"
               onClick={() => moveCurrentCurrencySymbolIndex('forward')}
               onContextMenu={() => moveCurrentCurrencySymbolIndex('backward')}
             >
@@ -219,7 +232,7 @@ export default function Home() {
 
             <ContentEditable
               html={(yearlyAdditionValue ?? '0').toLocaleString()}
-              className={"flex-1 bg-transparent outline-none rounded-lg border border-black hover:border-slate-600 focus:border-slate-700 active:border-slate-500 px-2 py-1 select-text transition-all " + (yearlyAdditionValue == null || yearlyAdditionValue === 0 ? 'text-slate-500' : 'text-slate-50')}
+              className={"flex-1 bg-transparent outline-none rounded-lg border border-transparent hover:border-slate-400 focus:border-slate-500 active:border-slate-500 dark:border-black dark:hover:border-slate-600 dark:focus:border-slate-700 dark:active:border-slate-500 px-2 py-1 select-text transition-all " + (yearlyAdditionValue == null || yearlyAdditionValue === 0 ? 'text-slate-50 dark:text-slate-500' : 'text-slate-500 dark:text-slate-300')}
               onChange={handleYearlyAdditionChange}
               tagName='div'
               onFocus={focusContentEditable}
@@ -227,7 +240,7 @@ export default function Home() {
 
           </div>
 
-          <div className="text-slate-500">
+          <div className="text-slate-400 dark:text-slate-500">
             each year
           </div>
 
