@@ -5,6 +5,8 @@ import PwaRegister from "./PwaRegister";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const basePath = process.env.NODE_ENV === "production" ? "/compound-interest-calculator" : "";
+
 export const metadata: Metadata = {
   title: "Compound Interest Calculator",
   description:
@@ -18,7 +20,6 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  manifest: "/manifest.webmanifest",
   icons: {
     icon: [
       { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
@@ -48,6 +49,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
+      <head>
+        {/* Explicit manifest link without crossorigin=use-credentials (breaks PWA install on Pages) */}
+        <link rel="manifest" href={`${basePath}/manifest.webmanifest`} />
+        <link rel="apple-touch-icon" href={`${basePath}/icons/apple-touch-icon.png`} />
+      </head>
       <body
         className={
           inter.className +
