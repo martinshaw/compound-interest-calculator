@@ -120,6 +120,7 @@ function almostEqual(a: number, b: number, epsilon = 0.02) {
 {
   assert.equal(parseInterestRatePercent("7"), 0.07);
   assert.equal(parseInterestRatePercent("7.5"), 0.075);
+  assert.equal(parseInterestRatePercent("7,5"), 0.075); // EU mobile decimal pad
   assert.equal(parseInterestRatePercent("7.25%"), 0.0725);
   assert.equal(parseInterestRatePercent(""), null);
   assert.equal(formatInterestRatePercent(0.07), "7");
@@ -141,6 +142,8 @@ function almostEqual(a: number, b: number, epsilon = 0.02) {
 {
   assert.equal(parseMoneyInput("1,000"), 1000);
   assert.equal(parseMoneyInput("1000.50"), 1000.5);
+  assert.equal(parseMoneyInput("1000,50"), 1000.5); // EU decimal comma
+  assert.equal(parseMoneyInput("1.000,50"), 1000.5); // EU thousands + decimal
   assert.equal(parseMoneyInput(""), null);
 }
 
