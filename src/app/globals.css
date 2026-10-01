@@ -40,13 +40,28 @@ body {
 /* 16px+ on inputs prevents iOS Safari zoom-on-focus; labels can be slightly smaller on mobile */
 @layer components {
   .calc-input {
-    @apply min-h-11 min-w-[3rem] bg-transparent outline-none rounded-lg border border-transparent
+    @apply min-h-11 bg-transparent outline-none rounded-lg border border-transparent
       px-2 py-2 sm:px-3 select-text transition-colors text-base sm:text-lg md:text-xl lg:text-3xl xl:text-4xl
       hover:border-slate-400 focus:border-slate-500 active:border-slate-500
       dark:border-black dark:hover:border-slate-600 dark:focus:border-slate-700 dark:active:border-slate-500;
+    box-sizing: border-box;
+    /* Grow with typed content where supported; size= still covers other browsers */
+    field-sizing: content;
     /* iOS: remove inner shadow / rounded native look */
     -webkit-appearance: none;
     appearance: none;
+  }
+
+  .calc-input-grow {
+    @apply flex-1;
+    /* em tracks text-base → xl:text-4xl so values like "40" never clip */
+    min-width: 4em;
+    width: auto;
+    max-width: 100%;
+  }
+
+  .calc-input-grow-wide {
+    min-width: 6em;
   }
 
   .calc-input-muted {
@@ -66,7 +81,7 @@ body {
       text-slate-500 hover:text-slate-600 active:bg-slate-200/60
       dark:text-slate-400 dark:hover:text-slate-300 dark:active:bg-slate-800/60
       text-base sm:text-lg md:text-xl lg:text-3xl xl:text-4xl
-      select-none transition-colors touch-manipulation;
+      select-none transition-colors touch-manipulation shrink-0;
   }
 }
 

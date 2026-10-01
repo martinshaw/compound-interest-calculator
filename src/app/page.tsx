@@ -164,10 +164,10 @@ export default function Home() {
     <main className="flex min-h-[100dvh] lg:h-[100dvh] flex-col items-stretch justify-start gap-6 sm:gap-8 px-safe sm:px-8 lg:px-16 xl:px-20 pt-safe pb-safe select-none">
       <section
         aria-label="Investment inputs"
-        className="flex flex-row flex-wrap items-center justify-center w-full gap-x-3 gap-y-2 sm:gap-x-4 sm:gap-y-3 pt-2 sm:pt-6 lg:pt-10"
+        className="flex flex-row flex-wrap items-center justify-between w-full gap-x-3 gap-y-2 sm:gap-x-4 sm:gap-y-3 pt-2 sm:pt-6 lg:pt-10"
       >
         {/* Amount: £ + value */}
-        <div className="inline-flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap shrink-0">
+        <div className="flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap flex-1 basis-0 min-w-max">
           <button
             type="button"
             aria-label="Change currency"
@@ -190,8 +190,9 @@ export default function Home() {
             autoCorrect="off"
             spellCheck={false}
             aria-label="Starting amount"
+            size={Math.max(4, amountDisplay.length)}
             className={
-              "calc-input w-[5.5rem] sm:w-[7rem] md:w-[9rem] " +
+              "calc-input calc-input-grow calc-input-grow-wide " +
               (amountValue == null || amountValue === 0 ? "calc-input-muted" : "calc-input-active")
             }
             value={amountDisplay}
@@ -209,7 +210,7 @@ export default function Home() {
         </div>
 
         {/* for N years */}
-        <div className="inline-flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap shrink-0">
+        <div className="flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap flex-1 basis-0 min-w-max">
           <span className="calc-label">for</span>
 
           <input
@@ -218,8 +219,9 @@ export default function Home() {
             enterKeyHint="next"
             autoComplete="off"
             aria-label="Number of years"
+            size={Math.max(3, yearDisplay.length)}
             className={
-              "calc-input w-14 sm:w-16 " +
+              "calc-input calc-input-grow " +
               (yearValue == null || yearValue === 0 ? "calc-input-muted" : "calc-input-active")
             }
             value={yearDisplay}
@@ -239,7 +241,7 @@ export default function Home() {
         </div>
 
         {/* at R% */}
-        <div className="inline-flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap shrink-0">
+        <div className="flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap flex-1 basis-0 min-w-max">
           <span className="calc-label">at</span>
 
           <input
@@ -247,8 +249,9 @@ export default function Home() {
             enterKeyHint="next"
             autoComplete="off"
             aria-label="Annual interest rate percent"
+            size={Math.max(3, interestRateDisplay.length)}
             className={
-              "calc-input w-14 sm:w-16 " +
+              "calc-input calc-input-grow " +
               (interestRateValue == null || interestRateValue === 0
                 ? "calc-input-muted"
                 : "calc-input-active")
@@ -272,7 +275,7 @@ export default function Home() {
         </div>
 
         {/* adding £X each year */}
-        <div className="inline-flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap shrink-0">
+        <div className="flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap flex-1 basis-0 min-w-max">
           <span className="calc-label">adding</span>
 
           <button
@@ -296,8 +299,9 @@ export default function Home() {
             autoCorrect="off"
             spellCheck={false}
             aria-label="Yearly addition"
+            size={Math.max(4, yearlyAdditionDisplay.length)}
             className={
-              "calc-input w-[5.5rem] sm:w-[7rem] md:w-[9rem] " +
+              "calc-input calc-input-grow calc-input-grow-wide " +
               (yearlyAdditionValue == null || yearlyAdditionValue === 0
                 ? "calc-input-muted"
                 : "calc-input-active")
