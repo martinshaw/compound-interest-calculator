@@ -1,6 +1,6 @@
 {
   "name": "compound-interest-calculator",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "author": {
     "name": "Martin Shaw",
     "email": "hello@martinshaw.co"
@@ -11,6 +11,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "npx tsx src/lib/__tests__/calculateCompoundInterest.test.ts",
     "deploy": "next build && gh-pages -d dist --nojekyll"
   },
   "dependencies": {

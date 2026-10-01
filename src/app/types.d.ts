@@ -11,8 +11,12 @@ Description: description
 
 type CompoundChartItemType = {
     year: string;
+    yearsElapsed?: number;
     yAxisValue: number;
     amountOfMoney: number;
+    interestEarned?: number;
+    totalContributions?: number;
+    totalInterest?: number;
 }
   
 type CompountChartDataType = CompoundChartItemType[];
