@@ -14,7 +14,7 @@ https://martinshaw.github.io/compound-interest-calculator/
 - **Shareable URLs** — inputs sync to the query string, including currency, e.g.  
   `?amount=10000&years=40&rate=7&add=1000&currency=%C2%A3`
 - **Progressive Web App** — installable on phone/desktop; works fullscreen like a native app
-- **Full offline support** — after one online visit, the client-side app keeps working without a network (versioned service worker cache `compound-interest-vX.Y.Z`, currently `v2.0.0`)
+- **Full offline support** — after one online visit, the client-side app keeps working without a network (versioned service worker cache `compound-interest-vX.Y.Z`, currently `v2.0.1`)
 - **Mobile-friendly controls** — unbreakable control phrases, visible input borders, accessible focus rings, and a layout that stays on one row across wide viewports and wraps cleanly on small screens
 - **iOS install hint** — closable “Add to Home Screen” tip in Safari
 
