@@ -164,9 +164,10 @@ export default function Home() {
     <main className="flex min-h-[100dvh] lg:h-[100dvh] flex-col items-stretch justify-start gap-6 sm:gap-8 px-safe sm:px-8 lg:px-16 xl:px-20 pt-safe pb-safe select-none">
       <section
         aria-label="Investment inputs"
-        className="flex flex-col lg:flex-row lg:flex-wrap justify-center items-stretch lg:items-center w-full gap-3 sm:gap-4 lg:gap-5 pt-2 sm:pt-6 lg:pt-10"
+        className="flex flex-row flex-wrap items-center justify-center w-full gap-x-3 gap-y-2 sm:gap-x-4 sm:gap-y-3 pt-2 sm:pt-6 lg:pt-10"
       >
-        <div className="flex flex-row items-center gap-1 sm:gap-2 w-full lg:w-auto lg:flex-1 lg:min-w-[12rem]">
+        {/* Amount: £ + value */}
+        <div className="inline-flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap shrink-0">
           <button
             type="button"
             aria-label="Change currency"
@@ -190,7 +191,7 @@ export default function Home() {
             spellCheck={false}
             aria-label="Starting amount"
             className={
-              "calc-input flex-1 w-full " +
+              "calc-input w-[5.5rem] sm:w-[7rem] md:w-[9rem] " +
               (amountValue == null || amountValue === 0 ? "calc-input-muted" : "calc-input-active")
             }
             value={amountDisplay}
@@ -207,7 +208,8 @@ export default function Home() {
           />
         </div>
 
-        <div className="flex flex-row flex-wrap items-center gap-x-2 gap-y-3 sm:gap-3 w-full lg:w-auto lg:flex-[2]">
+        {/* for N years */}
+        <div className="inline-flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap shrink-0">
           <span className="calc-label">for</span>
 
           <input
@@ -217,7 +219,7 @@ export default function Home() {
             autoComplete="off"
             aria-label="Number of years"
             className={
-              "calc-input w-20 sm:w-24 " +
+              "calc-input w-14 sm:w-16 " +
               (yearValue == null || yearValue === 0 ? "calc-input-muted" : "calc-input-active")
             }
             value={yearDisplay}
@@ -233,80 +235,85 @@ export default function Home() {
             }}
           />
 
-          <span className="calc-label">years at</span>
+          <span className="calc-label">years</span>
+        </div>
 
-          <div className="flex flex-row items-center gap-1 sm:gap-2">
-            <input
-              inputMode="decimal"
-              enterKeyHint="next"
-              autoComplete="off"
-              aria-label="Annual interest rate percent"
-              className={
-                "calc-input w-20 sm:w-24 " +
-                (interestRateValue == null || interestRateValue === 0
-                  ? "calc-input-muted"
-                  : "calc-input-active")
+        {/* at R% */}
+        <div className="inline-flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap shrink-0">
+          <span className="calc-label">at</span>
+
+          <input
+            inputMode="decimal"
+            enterKeyHint="next"
+            autoComplete="off"
+            aria-label="Annual interest rate percent"
+            className={
+              "calc-input w-14 sm:w-16 " +
+              (interestRateValue == null || interestRateValue === 0
+                ? "calc-input-muted"
+                : "calc-input-active")
+            }
+            value={interestRateDisplay}
+            onChange={handleInterestRateChange}
+            onFocus={(event) => {
+              setInterestRateFocused(true);
+              setInterestRateDraft(formatInterestRatePercent(interestRateValue ?? 0));
+              selectAllOnFocus(event);
+            }}
+            onBlur={() => {
+              setInterestRateFocused(false);
+              if (interestRateValue != null) {
+                setInterestRateDraft(formatInterestRatePercent(interestRateValue));
               }
-              value={interestRateDisplay}
-              onChange={handleInterestRateChange}
-              onFocus={(event) => {
-                setInterestRateFocused(true);
-                setInterestRateDraft(formatInterestRatePercent(interestRateValue ?? 0));
-                selectAllOnFocus(event);
-              }}
-              onBlur={() => {
-                setInterestRateFocused(false);
-                if (interestRateValue != null) {
-                  setInterestRateDraft(formatInterestRatePercent(interestRateValue));
-                }
-              }}
-            />
-            <span className="calc-label">%,</span>
-          </div>
+            }}
+          />
 
+          <span className="calc-label">%</span>
+        </div>
+
+        {/* adding £X each year */}
+        <div className="inline-flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap shrink-0">
           <span className="calc-label">adding</span>
 
-          <div className="flex flex-row items-center gap-1 sm:gap-2 flex-1 min-w-[8rem]">
-            <button
-              type="button"
-              aria-label="Change currency"
-              title="Tap to change currency"
-              className="calc-currency-btn"
-              onClick={() => moveCurrentCurrencySymbolIndex("forward")}
-              onContextMenu={(event) => {
-                event.preventDefault();
-                moveCurrentCurrencySymbolIndex("backward");
-              }}
-            >
-              {currency}
-            </button>
+          <button
+            type="button"
+            aria-label="Change currency"
+            title="Tap to change currency"
+            className="calc-currency-btn"
+            onClick={() => moveCurrentCurrencySymbolIndex("forward")}
+            onContextMenu={(event) => {
+              event.preventDefault();
+              moveCurrentCurrencySymbolIndex("backward");
+            }}
+          >
+            {currency}
+          </button>
 
-            <input
-              inputMode="decimal"
-              enterKeyHint="done"
-              autoComplete="off"
-              autoCorrect="off"
-              spellCheck={false}
-              aria-label="Yearly addition"
-              className={
-                "calc-input flex-1 w-full " +
-                (yearlyAdditionValue == null || yearlyAdditionValue === 0
-                  ? "calc-input-muted"
-                  : "calc-input-active")
-              }
-              value={yearlyAdditionDisplay}
-              onChange={handleYearlyAdditionChange}
-              onFocus={(event) => {
-                setYearlyAdditionFocused(true);
-                setYearlyAdditionDraft(formatMoneyField(yearlyAdditionValue));
-                selectAllOnFocus(event);
-              }}
-              onBlur={() => {
-                setYearlyAdditionFocused(false);
-                setYearlyAdditionDraft(formatMoneyField(yearlyAdditionValue));
-              }}
-            />
-          </div>
+          <input
+            inputMode="decimal"
+            enterKeyHint="done"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            aria-label="Yearly addition"
+            className={
+              "calc-input w-[5.5rem] sm:w-[7rem] md:w-[9rem] " +
+              (yearlyAdditionValue == null || yearlyAdditionValue === 0
+                ? "calc-input-muted"
+                : "calc-input-active")
+            }
+            value={yearlyAdditionDisplay}
+            onChange={handleYearlyAdditionChange}
+            onFocus={(event) => {
+              setYearlyAdditionFocused(true);
+              setYearlyAdditionDraft(formatMoneyField(yearlyAdditionValue));
+              selectAllOnFocus(event);
+            }}
+            onBlur={() => {
+              setYearlyAdditionFocused(false);
+              setYearlyAdditionDraft(formatMoneyField(yearlyAdditionValue));
+            }}
+          />
 
           <span className="calc-label">each year</span>
         </div>
