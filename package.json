@@ -7,11 +7,13 @@
   },
   "private": true,
   "scripts": {
+    "predev": "node scripts/prepare-sw.js",
     "dev": "next dev",
-    "build": "next build",
+    "prebuild": "node scripts/prepare-sw.js",
+    "build": "next build && node scripts/precache-sw.js",
     "start": "next start",
     "lint": "next lint",
-    "test": "npx tsx src/lib/__tests__/calculateCompoundInterest.test.ts"
+    "test": "npx tsx src/lib/__tests__/calculateCompoundInterest.test.ts && npx tsx src/lib/__tests__/urlState.test.ts"
   },
   "dependencies": {
     "@uidotdev/usehooks": "^2.4.1",

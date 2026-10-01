@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
+import InstallHint from "./InstallHint";
 
 /**
  * Registers the service worker relative to the current page so it works both
  * on localhost and under the GitHub Pages /compound-interest-calculator/ base.
+ * Also shows a closable iOS Add-to-Home-Screen hint when relevant.
  */
 export default function PwaRegister() {
   useEffect(() => {
@@ -23,5 +25,5 @@ export default function PwaRegister() {
     else window.addEventListener("load", register, { once: true });
   }, []);
 
-  return null;
+  return <InstallHint />;
 }

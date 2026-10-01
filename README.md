@@ -41,4 +41,9 @@ npm run build
 
 ## Progressive Web App
 
-The site ships a web app manifest and service worker. On supported mobile browsers (iOS Safari “Add to Home Screen”, Android Chrome “Install app”) it can run fullscreen like a native app, including a basic offline shell.
+The site ships a web app manifest and service worker. On supported mobile browsers (iOS Safari “Add to Home Screen”, Android Chrome “Install app”) it can run fullscreen like a native app.
+
+**Offline:** yes — the calculator is entirely client-side. After you’ve opened it online once, the service worker caches the app shell and static assets so it keeps working without a network. Each release busts the cache (`compound-interest-vX.Y.Z`).
+
+Shareable links encode the current inputs, e.g.
+`?amount=10000&years=40&rate=7&add=1000&currency=%C2%A3`.

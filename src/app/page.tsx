@@ -18,6 +18,9 @@ import {
   parseMoneyInput,
   parseYearCount,
 } from "../lib/calculateCompoundInterest";
+import { buildCalculatorSearchParams, readCalculatorUrlState } from "../lib/urlState";
+
+const CURRENCY_SYMBOLS = ["£", "$", "€", "¥", "₹", "₽", "₿", "₺", "₴", "₩", "₮", "₦"] as const;
 
 function formatMoneyField(value: number | null): string {
   if (value == null) return "0";
@@ -25,14 +28,14 @@ function formatMoneyField(value: number | null): string {
 }
 
 export default function Home() {
-  const currencySymbols = ["£", "$", "€", "¥", "₹", "₽", "₿", "₺", "₴", "₩", "₮", "₦"];
   const [currentCurrencySymbolIndex, setCurrentCurrencySymbolIndex] = useState<number>(0);
+  const urlHydrated = useRef(false);
   const moveCurrentCurrencySymbolIndex = (movement: "forward" | "backward") => {
     const nextIndex =
       movement === "forward" ? currentCurrencySymbolIndex + 1 : currentCurrencySymbolIndex - 1;
 
-    if (nextIndex < 0) setCurrentCurrencySymbolIndex(currencySymbols.length - 1);
-    else if (nextIndex >= currencySymbols.length) setCurrentCurrencySymbolIndex(0);
+    if (nextIndex < 0) setCurrentCurrencySymbolIndex(CURRENCY_SYMBOLS.length - 1);
+    else if (nextIndex >= CURRENCY_SYMBOLS.length) setCurrentCurrencySymbolIndex(0);
     else setCurrentCurrencySymbolIndex(nextIndex);
   };
 
@@ -108,8 +111,70 @@ export default function Home() {
     setInterestRateValue(parseInterestRatePercent(raw));
   };
 
-  //
+  // Hydrate from shareable URL once on mount. Defer enabling URL writes until
+  // after React applies hydrated state and debounced values catch up, so we
+  // never clobber incoming ?amount=…&years=… share links.
+  useEffect(() => {
+    const fromUrl = readCalculatorUrlState(window.location.search, CURRENCY_SYMBOLS);
 
+    if (fromUrl.amount != null) {
+      setAmountValue(fromUrl.amount);
+      setAmountDraft(formatMoneyField(fromUrl.amount));
+    }
+    if (fromUrl.years != null) {
+      setYearValue(fromUrl.years);
+      setYearDraft(String(fromUrl.years));
+    }
+    if (fromUrl.ratePercent != null) {
+      const decimal = fromUrl.ratePercent / 100;
+      setInterestRateValue(decimal);
+      setInterestRateDraft(formatInterestRatePercent(decimal));
+    }
+    if (fromUrl.add != null) {
+      setYearlyAdditionValue(fromUrl.add);
+      setYearlyAdditionDraft(formatMoneyField(fromUrl.add));
+    }
+    if (fromUrl.currency != null) {
+      const idx = CURRENCY_SYMBOLS.indexOf(
+        fromUrl.currency as (typeof CURRENCY_SYMBOLS)[number]
+      );
+      if (idx >= 0) setCurrentCurrencySymbolIndex(idx);
+    }
+
+    const enableTimer = window.setTimeout(() => {
+      urlHydrated.current = true;
+    }, 300);
+    return () => window.clearTimeout(enableTimer);
+  }, []);
+
+  // Persist state to the URL for sharing (including currency)
+  useEffect(() => {
+    if (!urlHydrated.current) return;
+
+    const qs = buildCalculatorSearchParams({
+      amount: debouncedAmountValue,
+      years: debouncedYearValue,
+      rateDecimal: debouncedInterestRateValue,
+      add: debouncedYearlyAdditionValue,
+      currency: CURRENCY_SYMBOLS[currentCurrencySymbolIndex],
+    });
+
+    const next = qs
+      ? `${window.location.pathname}?${qs}${window.location.hash}`
+      : `${window.location.pathname}${window.location.hash}`;
+    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (next !== current) {
+      window.history.replaceState(null, "", next);
+    }
+  }, [
+    debouncedAmountValue,
+    debouncedYearValue,
+    debouncedInterestRateValue,
+    debouncedYearlyAdditionValue,
+    currentCurrencySymbolIndex,
+  ]);
+
+  //
   const data: CompountChartDataType =
     debouncedAmountValue == null || debouncedYearValue == null
       ? []
@@ -158,7 +223,7 @@ export default function Home() {
     ? interestRateDraft
     : formatInterestRatePercent(interestRateValue ?? 0);
 
-  const currency = currencySymbols[currentCurrencySymbolIndex];
+  const currency = CURRENCY_SYMBOLS[currentCurrencySymbolIndex];
 
   return (
     <main className="flex min-h-[100dvh] lg:h-[100dvh] flex-col items-stretch justify-start gap-6 sm:gap-8 px-safe sm:px-8 lg:px-16 xl:px-20 pt-safe pb-safe select-none">
