@@ -40,33 +40,69 @@ body {
 /* 16px+ on inputs prevents iOS Safari zoom-on-focus; labels can be slightly smaller on mobile */
 @layer components {
   .calc-input {
-    @apply min-h-11 min-w-[3rem] bg-transparent outline-none rounded-lg border border-transparent
-      px-2 py-2 sm:px-3 select-text transition-colors text-base sm:text-lg md:text-xl lg:text-3xl xl:text-4xl
-      hover:border-slate-400 focus:border-slate-500 active:border-slate-500
-      dark:border-black dark:hover:border-slate-600 dark:focus:border-slate-700 dark:active:border-slate-500;
+    @apply min-h-11 bg-transparent rounded-lg border
+      border-slate-400 dark:border-slate-500
+      px-2 py-2 sm:px-3 select-text transition-colors
+      text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl
+      hover:border-slate-500 dark:hover:border-slate-400
+      focus:border-slate-600 dark:focus:border-slate-300
+      focus:ring-2 focus:ring-slate-500/50 dark:focus:ring-slate-400/50
+      focus:outline-none;
+    box-sizing: border-box;
+    /* Grow with typed content where supported; size= still covers other browsers */
+    field-sizing: content;
     /* iOS: remove inner shadow / rounded native look */
     -webkit-appearance: none;
     appearance: none;
   }
 
+  .calc-input-grow {
+    @apply flex-1;
+    /* em tracks text size so values like "40" never clip */
+    min-width: 3.5em;
+    width: auto;
+    max-width: 100%;
+  }
+
+  .calc-input-grow-wide {
+    min-width: 5em;
+  }
+
   .calc-input-muted {
-    @apply text-slate-300 dark:text-slate-500;
+    @apply text-slate-400 dark:text-slate-500;
   }
 
   .calc-input-active {
-    @apply text-slate-600 dark:text-slate-300;
+    @apply text-slate-700 dark:text-slate-200;
   }
 
   .calc-label {
-    @apply text-slate-400 dark:text-slate-500 text-sm sm:text-lg md:text-xl lg:text-3xl xl:text-4xl shrink-0;
+    @apply text-slate-400 dark:text-slate-500
+      text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl shrink-0;
   }
 
   .calc-currency-btn {
     @apply inline-flex items-center justify-center min-h-11 min-w-10 sm:min-w-11 rounded-lg
-      text-slate-500 hover:text-slate-600 active:bg-slate-200/60
-      dark:text-slate-400 dark:hover:text-slate-300 dark:active:bg-slate-800/60
-      text-base sm:text-lg md:text-xl lg:text-3xl xl:text-4xl
-      select-none transition-colors touch-manipulation;
+      border border-slate-400 dark:border-slate-500
+      text-slate-500 hover:text-slate-600 hover:border-slate-500
+      active:bg-slate-200/60
+      focus:outline-none focus:ring-2 focus:ring-slate-500/50 dark:focus:ring-slate-400/50
+      dark:text-slate-400 dark:hover:text-slate-300 dark:hover:border-slate-400 dark:active:bg-slate-800/60
+      text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl
+      select-none transition-colors touch-manipulation shrink-0;
+  }
+
+  .install-hint {
+    @apply fixed inset-x-0 bottom-0 z-50 mx-auto max-w-lg
+      px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-0;
+  }
+
+  .install-hint-card {
+    @apply flex items-start gap-3 rounded-xl border shadow-lg
+      bg-slate-100/95 dark:bg-slate-900/95
+      border-slate-300 dark:border-slate-600
+      text-slate-600 dark:text-slate-300
+      px-4 py-3 text-sm leading-snug;
   }
 }
 
