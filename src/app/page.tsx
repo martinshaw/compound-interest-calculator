@@ -1,10 +1,16 @@
 "use client";
 
-import { useAsyncMemo } from "use-async-memo";
 import { useDebounce } from "@uidotdev/usehooks";
-import { FocusEventHandler, lazy, Suspense, useEffect, useRef, useState } from "react";
+import { FocusEventHandler, Suspense, useEffect, useRef, useState } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import Chart from "./Chart";
+import {
+  calculateCompoundInterest,
+  formatInterestRatePercent,
+  parseInterestRatePercent,
+  parseMoneyInput,
+  parseYearCount,
+} from "../lib/calculateCompoundInterest";
 
 export default function Home() {
   const currencySymbols = ["£", "$", "€", "¥", "₹", "₽", "₿", "₺", "₴", "₩", "₮", "₦"];
@@ -24,13 +30,7 @@ export default function Home() {
 
   const handleAmountChange = (event: ContentEditableEvent) => {
     if (event.target.value === '' || event.target.value == null) return setAmountValue(null);
-
-    let value: string | number = event.target.value.replaceAll(' ', '').replaceAll('\n', '').replaceAll(',', '').replaceAll('<br>', '');
-
-    value = parseFloat(value);
-    if (isNaN(value)) return setAmountValue(null);
-
-    setAmountValue(value);
+    setAmountValue(parseMoneyInput(event.target.value));
   };
 
   //
@@ -40,16 +40,7 @@ export default function Home() {
 
   const handleYearChange = (event: ContentEditableEvent) => {
     if (event.target.value === '' || event.target.value == null) return setYearValue(null);
-
-    let value: string | number = event.target.value.replaceAll(' ', '').replaceAll('\n', '').replaceAll(',', '').replaceAll('<br>', '');
-
-    // So many operations multiplying exponential numbers causes the browser to crash over 4 digits
-    if ((value + '').length > 4) return setYearValue(9999);
-
-    value = parseFloat(value);
-    if (isNaN(value)) return setYearValue(null);
-
-    setYearValue(value);
+    setYearValue(parseYearCount(event.target.value));
   };
 
   //
@@ -59,62 +50,46 @@ export default function Home() {
 
   const handleYearlyAdditionChange = (event: ContentEditableEvent) => {
     if (event.target.value === '' || event.target.value == null) return setYearlyAdditionValue(null);
-
-    let value: string | number = event.target.value.replaceAll(' ', '').replaceAll('\n', '').replaceAll(',', '').replaceAll('<br>', '');
-
-    value = parseFloat(value);
-    if (isNaN(value)) return setYearlyAdditionValue(null);
-
-    setYearlyAdditionValue(value);
+    setYearlyAdditionValue(parseMoneyInput(event.target.value));
   };
 
   //
 
   const [interestRateValue, setInterestRateValue] = useState<number|null>(0.07);
   const debouncedInterestRateValue = useDebounce(interestRateValue, 250);
+  // Keep a raw string while editing so fractional rates like 7.5% are typeable
+  // (controlled toFixed(0) previously rounded 7.5 → "8" and blocked decimals).
+  const [interestRateDraft, setInterestRateDraft] = useState<string>(
+    formatInterestRatePercent(0.07)
+  );
+  const [interestRateFocused, setInterestRateFocused] = useState(false);
 
   const handleInterestRateChange = (event: ContentEditableEvent) => {
-    if (event.target.value === '' || event.target.value == null) return setInterestRateValue(null);
+    const raw = (event.target.value ?? '')
+      .replaceAll('\n', '')
+      .replaceAll('<br>', '')
+      .replaceAll(' ', '');
+    setInterestRateDraft(raw);
 
-    let value: string | number = event.target.value.replaceAll(' ', '').replaceAll('\n', '').replaceAll(',', '').replaceAll('<br>', '');
-    
-    value = parseFloat(value) / 100;
-    if (isNaN(value)) return setInterestRateValue(null);
+    if (raw === '' || raw === '.' || raw === '-' || raw === '-.') {
+      setInterestRateValue(null);
+      return;
+    }
 
-    setInterestRateValue(value);
+    setInterestRateValue(parseInterestRatePercent(raw));
   };
 
   //
 
-  const data: CompountChartDataType = useAsyncMemo<CompountChartDataType>(
-    async () => new Promise(resolve => {
-      if (debouncedAmountValue == null || debouncedYearValue == null) return resolve([]);
-
-      const result: CompountChartDataType = [];
-
-      let amount = debouncedAmountValue; 
-      const currentYear = new Date().getFullYear();
-
-      for (let yearIndex = 0; yearIndex < (debouncedYearValue + 1); yearIndex++) {
-        result.push({
-          year: (yearIndex + currentYear).toString(),
-          yAxisValue: amount,
-          amountOfMoney: amount,
+  const data: CompountChartDataType =
+    debouncedAmountValue == null || debouncedYearValue == null
+      ? []
+      : calculateCompoundInterest({
+          principal: debouncedAmountValue,
+          years: debouncedYearValue,
+          annualRate: debouncedInterestRateValue ?? 0,
+          yearlyContribution: debouncedYearlyAdditionValue ?? 0,
         });
-
-        amount = (amount * (1 + (debouncedInterestRateValue ?? 0))) + (debouncedYearlyAdditionValue ?? 0);
-      }
-
-      resolve(result);
-    }), 
-    [
-      debouncedAmountValue,
-      debouncedYearValue,
-      debouncedYearlyAdditionValue,
-      debouncedInterestRateValue,
-    ],
-    []
-  );
 
   //
 
@@ -155,6 +130,10 @@ export default function Home() {
     selection?.removeAllRanges();
     selection?.addRange(range);
   }
+
+  const interestRateDisplay = interestRateFocused
+    ? interestRateDraft
+    : formatInterestRatePercent(interestRateValue ?? 0);
 
   return (
     <main className="flex min-h-[150vh] lg:min-h-screen flex-col items-center justify-between px-20 pt-20 gap-10 select-none">
@@ -203,11 +182,21 @@ export default function Home() {
           <div className="flex flex-row justify-center items-center gap-2">
 
             <ContentEditable
-              html={((interestRateValue ?? 0) * 100).toFixed(0)}
+              html={interestRateDisplay}
               className={"flex-1 bg-transparent outline-none rounded-lg border border-transparent hover:border-slate-400 focus:border-slate-500 active:border-slate-500 dark:border-black dark:hover:border-slate-600 dark:focus:border-slate-700 dark:active:border-slate-500 px-2 py-1 select-text transition-all " + (interestRateValue == null || interestRateValue === 0 ? 'text-slate-50 dark:text-slate-500' : 'text-slate-500 dark:text-slate-300')}
               onChange={handleInterestRateChange}
               tagName='div'
-              onFocus={focusContentEditable}
+              onFocus={(event) => {
+                setInterestRateFocused(true);
+                setInterestRateDraft(formatInterestRatePercent(interestRateValue ?? 0));
+                focusContentEditable(event);
+              }}
+              onBlur={() => {
+                setInterestRateFocused(false);
+                if (interestRateValue != null) {
+                  setInterestRateDraft(formatInterestRatePercent(interestRateValue));
+                }
+              }}
             />
 
             <div className="text-slate-400 dark:text-slate-500">
