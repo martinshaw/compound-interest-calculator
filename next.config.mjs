@@ -3,7 +3,8 @@ const isProduction = process.env.NODE_ENV === 'production'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: 'export',
-    assetPrefix: '/compound-interest-calculator',
+    // Project Pages site lives at /compound-interest-calculator/
+    assetPrefix: isProduction ? '/compound-interest-calculator' : undefined,
     distDir: 'dist',
 };
 
