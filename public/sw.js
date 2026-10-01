@@ -1,7 +1,7 @@
 /* Compound Interest Calculator — full offline app shell for GitHub Pages / PWA.
  * CACHE_NAME is injected from package.json on build (see scripts/prepare-sw.js).
  */
-const CACHE_NAME = 'compound-interest-v2.0.0';
+const CACHE_NAME = 'compound-interest-v2.0.1';
 
 /** Relative to the service worker scope (works with /compound-interest-calculator/). */
 const PRECACHE_URLS = [
