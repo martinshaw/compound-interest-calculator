@@ -11,12 +11,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "npx tsx src/lib/__tests__/calculateCompoundInterest.test.ts",
-    "deploy": "next build && gh-pages -d dist --nojekyll"
+    "test": "npx tsx src/lib/__tests__/calculateCompoundInterest.test.ts"
   },
   "dependencies": {
     "@uidotdev/usehooks": "^2.4.1",
-    "gh-pages": "^6.1.1",
     "next": "14.2.5",
     "react": "^18",
     "react-contenteditable": "^3.3.7",
