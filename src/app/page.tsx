@@ -226,13 +226,13 @@ export default function Home() {
   const currency = CURRENCY_SYMBOLS[currentCurrencySymbolIndex];
 
   return (
-    <main className="flex min-h-[100dvh] lg:h-[100dvh] flex-col items-stretch justify-start gap-6 sm:gap-8 px-safe sm:px-8 lg:px-16 xl:px-20 pt-safe pb-safe select-none">
+    <main className="flex min-h-[100dvh] lg:h-[100dvh] flex-col items-stretch justify-start gap-6 sm:gap-8 px-safe sm:px-6 lg:px-10 xl:px-14 pt-safe pb-safe select-none">
       <section
         aria-label="Investment inputs"
-        className="flex flex-row flex-wrap items-center justify-between w-full gap-x-3 gap-y-2 sm:gap-x-4 sm:gap-y-3 pt-2 sm:pt-6 lg:pt-10"
+        className="calc-controls flex w-full flex-row flex-wrap items-center justify-between gap-x-2 gap-y-2 sm:gap-x-3 sm:gap-y-3 pt-2 sm:pt-6 lg:pt-10 lg:flex-nowrap"
       >
         {/* Amount: £ + value */}
-        <div className="flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap flex-1 basis-0 min-w-max">
+        <div className="calc-control-group flex min-w-0 flex-1 basis-[max-content] flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap">
           <button
             type="button"
             aria-label="Change currency"
@@ -275,7 +275,7 @@ export default function Home() {
         </div>
 
         {/* for N years */}
-        <div className="flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap flex-1 basis-0 min-w-max">
+        <div className="calc-control-group flex min-w-0 flex-1 basis-[max-content] flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap">
           <span className="calc-label">for</span>
 
           <input
@@ -306,7 +306,7 @@ export default function Home() {
         </div>
 
         {/* at R% */}
-        <div className="flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap flex-1 basis-0 min-w-max">
+        <div className="calc-control-group flex min-w-0 flex-1 basis-[max-content] flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap">
           <span className="calc-label">at</span>
 
           <input
@@ -340,7 +340,7 @@ export default function Home() {
         </div>
 
         {/* adding £X each year */}
-        <div className="flex flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap flex-1 basis-0 min-w-max">
+        <div className="calc-control-group flex min-w-0 flex-1 basis-[max-content] flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap">
           <span className="calc-label">adding</span>
 
           <button

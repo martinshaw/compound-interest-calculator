@@ -41,11 +41,12 @@ body {
 @layer components {
   .calc-input {
     @apply min-h-11 bg-transparent rounded-lg border
-      border-slate-300/90 dark:border-slate-600
-      px-2 py-2 sm:px-3 select-text transition-colors text-base sm:text-lg md:text-xl lg:text-3xl xl:text-4xl
-      hover:border-slate-400 dark:hover:border-slate-500
-      focus:border-slate-500 dark:focus:border-slate-400
-      focus:ring-2 focus:ring-slate-400/60 dark:focus:ring-slate-500/50
+      border-slate-400 dark:border-slate-500
+      px-2 py-2 sm:px-3 select-text transition-colors
+      text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl
+      hover:border-slate-500 dark:hover:border-slate-400
+      focus:border-slate-600 dark:focus:border-slate-300
+      focus:ring-2 focus:ring-slate-500/50 dark:focus:ring-slate-400/50
       focus:outline-none;
     box-sizing: border-box;
     /* Grow with typed content where supported; size= still covers other browsers */
@@ -57,14 +58,14 @@ body {
 
   .calc-input-grow {
     @apply flex-1;
-    /* em tracks text-base → xl:text-4xl so values like "40" never clip */
-    min-width: 4em;
+    /* em tracks text size so values like "40" never clip */
+    min-width: 3.5em;
     width: auto;
     max-width: 100%;
   }
 
   .calc-input-grow-wide {
-    min-width: 6em;
+    min-width: 5em;
   }
 
   .calc-input-muted {
@@ -76,17 +77,18 @@ body {
   }
 
   .calc-label {
-    @apply text-slate-400 dark:text-slate-500 text-sm sm:text-lg md:text-xl lg:text-3xl xl:text-4xl shrink-0;
+    @apply text-slate-400 dark:text-slate-500
+      text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl shrink-0;
   }
 
   .calc-currency-btn {
     @apply inline-flex items-center justify-center min-h-11 min-w-10 sm:min-w-11 rounded-lg
-      border border-slate-300/90 dark:border-slate-600
-      text-slate-500 hover:text-slate-600 hover:border-slate-400
+      border border-slate-400 dark:border-slate-500
+      text-slate-500 hover:text-slate-600 hover:border-slate-500
       active:bg-slate-200/60
-      focus:outline-none focus:ring-2 focus:ring-slate-400/60 dark:focus:ring-slate-500/50
-      dark:text-slate-400 dark:hover:text-slate-300 dark:hover:border-slate-500 dark:active:bg-slate-800/60
-      text-base sm:text-lg md:text-xl lg:text-3xl xl:text-4xl
+      focus:outline-none focus:ring-2 focus:ring-slate-500/50 dark:focus:ring-slate-400/50
+      dark:text-slate-400 dark:hover:text-slate-300 dark:hover:border-slate-400 dark:active:bg-slate-800/60
+      text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl
       select-none transition-colors touch-manipulation shrink-0;
   }
 
