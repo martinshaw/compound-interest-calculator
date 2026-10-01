@@ -1,6 +1,6 @@
 {
   "name": "compound-interest-calculator",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": {
     "name": "Martin Shaw",
     "email": "hello@martinshaw.co"
@@ -17,10 +17,8 @@
     "@uidotdev/usehooks": "^2.4.1",
     "next": "14.2.5",
     "react": "^18",
-    "react-contenteditable": "^3.3.7",
     "react-dom": "^18",
     "recharts": "^2.12.7",
-    "use-async-memo": "^1.2.5",
     "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {

@@ -123,15 +123,51 @@ export function calculateCompoundInterest(
 }
 
 /**
- * Parse a user-entered percentage (e.g. "7", "7.5", "7.25%") into a decimal rate.
+ * Normalize user numeric text for parsing across US/EU mobile keyboards.
+ * Uses the last separator as the decimal mark when both `.` and `,` appear.
+ * A lone US-style thousands group like "1,000" stays an integer.
  */
-export function parseInterestRatePercent(raw: string): number | null {
-  const cleaned = raw
+export function normalizeDecimalInput(raw: string): string {
+  let cleaned = raw
     .replaceAll(' ', '')
     .replaceAll('\n', '')
-    .replaceAll(',', '')
     .replaceAll('<br>', '')
     .replace(/%/g, '');
+
+  const lastPeriod = cleaned.lastIndexOf('.');
+  const lastComma = cleaned.lastIndexOf(',');
+
+  if (lastPeriod === -1 && lastComma === -1) return cleaned;
+
+  if (lastPeriod !== -1 && lastComma !== -1) {
+    if (lastComma > lastPeriod) {
+      // Decimal comma (EU): "1.000,50"
+      cleaned = cleaned.replaceAll('.', '');
+      const parts = cleaned.split(',');
+      cleaned = parts.slice(0, -1).join('') + '.' + parts[parts.length - 1];
+    } else {
+      // Decimal period (US): "1,000.50"
+      cleaned = cleaned.replaceAll(',', '');
+    }
+  } else if (lastPeriod !== -1) {
+    // Period only — already fine for parseFloat ("7.5")
+  } else if (/^\d{1,3}(,\d{3})+$/.test(cleaned)) {
+    // Thousands only: "1,000"
+    cleaned = cleaned.replaceAll(',', '');
+  } else {
+    // Decimal comma without thousands: "7,5" / "1000,50"
+    const parts = cleaned.split(',');
+    cleaned = parts.slice(0, -1).join('') + '.' + parts[parts.length - 1];
+  }
+
+  return cleaned;
+}
+
+/**
+ * Parse a user-entered percentage (e.g. "7", "7.5", "7,5", "7.25%") into a decimal rate.
+ */
+export function parseInterestRatePercent(raw: string): number | null {
+  const cleaned = normalizeDecimalInput(raw);
   if (cleaned === '' || cleaned === '.' || cleaned === '-' || cleaned === '-.') return null;
   const value = parseFloat(cleaned);
   if (!Number.isFinite(value)) return null;
@@ -170,14 +206,10 @@ export function parseYearCount(raw: string, maxYears = 500): number | null {
 
 /**
  * Parse a currency/money amount from user input.
- * Strips whitespace, thousands separators, and HTML line breaks.
+ * Accepts decimal commas from mobile keyboards (e.g. "1000,5") and US thousands separators.
  */
 export function parseMoneyInput(raw: string): number | null {
-  const cleaned = raw
-    .replaceAll(' ', '')
-    .replaceAll('\n', '')
-    .replaceAll(',', '')
-    .replaceAll('<br>', '');
+  const cleaned = normalizeDecimalInput(raw);
   if (cleaned === '' || cleaned === '.' || cleaned === '-' || cleaned === '-.') return null;
   const value = parseFloat(cleaned);
   if (!Number.isFinite(value)) return null;

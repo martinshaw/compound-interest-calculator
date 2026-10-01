@@ -38,3 +38,7 @@ You can also trigger a deploy manually from the Actions tab (**workflow_dispatch
 npm test
 npm run build
 ```
+
+## Progressive Web App
+
+The site ships a web app manifest and service worker. On supported mobile browsers (iOS Safari “Add to Home Screen”, Android Chrome “Install app”) it can run fullscreen like a native app, including a basic offline shell.

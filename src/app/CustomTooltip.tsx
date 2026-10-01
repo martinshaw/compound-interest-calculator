@@ -23,8 +23,8 @@ const CustomTooltip : ((props: CustomTooltipType) => ReactNode) = (props) => {
     const item = props.payload[0].payload;
 
     return (
-        <div className="px-6 py-4 rounded-lg shadow-md border bg-slate-100 dark:bg-black border-slate-300 dark:border-slate-500 text-slate-500 dark:text-slate-300">
-            <div className="text-lg font-bold">{props.label}</div>
+        <div className="max-w-[min(90vw,20rem)] px-4 py-3 sm:px-6 sm:py-4 rounded-lg shadow-md border bg-slate-100 dark:bg-black border-slate-300 dark:border-slate-500 text-slate-500 dark:text-slate-300 pointer-events-none">
+            <div className="text-base sm:text-lg font-bold">{props.label}</div>
             <div className="text-sm">Amount: {props.currencySymbol}{formatMoney(item.amountOfMoney)}</div>
             {item.totalInterest != null && item.yearsElapsed > 0 && (
                 <div className="text-sm mt-1">Interest earned: {props.currencySymbol}{formatMoney(item.totalInterest)}</div>
