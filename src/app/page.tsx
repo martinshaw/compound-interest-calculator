@@ -226,13 +226,13 @@ export default function Home() {
   const currency = CURRENCY_SYMBOLS[currentCurrencySymbolIndex];
 
   return (
-    <main className="flex min-h-[100dvh] lg:h-[100dvh] flex-col items-stretch justify-start gap-6 sm:gap-8 px-safe sm:px-6 lg:px-10 xl:px-14 pt-safe pb-safe select-none">
+    <main className="flex min-h-[100dvh] lg:h-[100dvh] flex-col items-stretch justify-start gap-6 sm:gap-8 px-safe sm:px-5 lg:px-8 xl:px-10 pt-safe pb-safe select-none">
       <section
         aria-label="Investment inputs"
-        className="calc-controls flex w-full flex-row flex-wrap items-center justify-between gap-x-2 gap-y-2 sm:gap-x-3 sm:gap-y-3 pt-2 sm:pt-6 lg:pt-10 lg:flex-nowrap"
+        className="calc-controls pt-2 sm:pt-6 lg:pt-10"
       >
         {/* Amount: £ + value */}
-        <div className="calc-control-group flex min-w-0 flex-1 basis-[max-content] flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap">
+        <div className="calc-control-group">
           <button
             type="button"
             aria-label="Change currency"
@@ -275,7 +275,7 @@ export default function Home() {
         </div>
 
         {/* for N years */}
-        <div className="calc-control-group flex min-w-0 flex-1 basis-[max-content] flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap">
+        <div className="calc-control-group">
           <span className="calc-label">for</span>
 
           <input
@@ -306,7 +306,7 @@ export default function Home() {
         </div>
 
         {/* at R% */}
-        <div className="calc-control-group flex min-w-0 flex-1 basis-[max-content] flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap">
+        <div className="calc-control-group">
           <span className="calc-label">at</span>
 
           <input
@@ -340,7 +340,7 @@ export default function Home() {
         </div>
 
         {/* adding £X each year */}
-        <div className="calc-control-group flex min-w-0 flex-1 basis-[max-content] flex-nowrap items-center gap-1 sm:gap-2 whitespace-nowrap">
+        <div className="calc-control-group">
           <span className="calc-label">adding</span>
 
           <button

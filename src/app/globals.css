@@ -39,16 +39,51 @@ body {
 
 /* 16px+ on inputs prevents iOS Safari zoom-on-focus; labels can be slightly smaller on mobile */
 @layer components {
+  /*
+   * Control row: prefer a single full-width line. Groups keep phrases intact
+   * (nowrap) and only wrap as whole units on narrow viewports.
+   */
+  .calc-controls {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    column-gap: clamp(0.35rem, 1.2vw, 1rem);
+    row-gap: 0.5rem;
+    /* Fluid type so four groups stay on one row across typical desktop widths */
+    font-size: clamp(1rem, 1.55vw + 0.55rem, 2.25rem);
+  }
+
+  @media (min-width: 720px) {
+    .calc-controls {
+      flex-wrap: nowrap;
+    }
+  }
+
+  .calc-control-group {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: clamp(0.25rem, 0.6vw, 0.5rem);
+    white-space: nowrap;
+    /* Grow to span the viewport; basis/min from content so wrap decisions stay honest */
+    flex: 1 1 auto;
+    min-width: max-content;
+    max-width: 100%;
+  }
+
   .calc-input {
     @apply min-h-11 bg-transparent rounded-lg border
       border-slate-400 dark:border-slate-500
-      px-2 py-2 sm:px-3 select-text transition-colors
-      text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl
+      px-2 py-2 select-text transition-colors
       hover:border-slate-500 dark:hover:border-slate-400
       focus:border-slate-600 dark:focus:border-slate-300
       focus:ring-2 focus:ring-slate-500/50 dark:focus:ring-slate-400/50
       focus:outline-none;
     box-sizing: border-box;
+    font-size: 1em;
+    line-height: 1.25;
     /* Grow with typed content where supported; size= still covers other browsers */
     field-sizing: content;
     /* iOS: remove inner shadow / rounded native look */
@@ -57,15 +92,15 @@ body {
   }
 
   .calc-input-grow {
-    @apply flex-1;
-    /* em tracks text size so values like "40" never clip */
-    min-width: 3.5em;
+    flex: 1 1 auto;
+    /* Modest floor so short values like "40" stay tappable; avoid forcing wrap */
+    min-width: 2.75em;
     width: auto;
     max-width: 100%;
   }
 
   .calc-input-grow-wide {
-    min-width: 5em;
+    min-width: 4em;
   }
 
   .calc-input-muted {
@@ -77,19 +112,22 @@ body {
   }
 
   .calc-label {
-    @apply text-slate-400 dark:text-slate-500
-      text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl shrink-0;
+    @apply text-slate-400 dark:text-slate-500 shrink-0;
+    font-size: 1em;
+    line-height: 1.25;
   }
 
   .calc-currency-btn {
-    @apply inline-flex items-center justify-center min-h-11 min-w-10 sm:min-w-11 rounded-lg
+    @apply inline-flex items-center justify-center min-h-11 min-w-10 rounded-lg
       border border-slate-400 dark:border-slate-500
       text-slate-500 hover:text-slate-600 hover:border-slate-500
       active:bg-slate-200/60
       focus:outline-none focus:ring-2 focus:ring-slate-500/50 dark:focus:ring-slate-400/50
       dark:text-slate-400 dark:hover:text-slate-300 dark:hover:border-slate-400 dark:active:bg-slate-800/60
-      text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl
       select-none transition-colors touch-manipulation shrink-0;
+    font-size: 1em;
+    line-height: 1.25;
+    padding-inline: 0.5rem;
   }
 
   .install-hint {
